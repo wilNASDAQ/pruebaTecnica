@@ -9,12 +9,12 @@ import lombok.Data;
 public class categoriaProductos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int idCategoria;
 
-    int idCategoria;
-    String codigo;
-    String nombre;
-    String descripcion;
-    Boolean activo;
+    private String codigo;
+    private String nombre;
+    private String descripcion;
+    private Boolean activo;
 
 
 }
