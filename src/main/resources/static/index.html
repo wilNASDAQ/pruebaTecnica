@@ -2,53 +2,167 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Gestión de Productos</title>
-    <link rel="stylesheet" href="/css/index.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión - Productos y Categorías</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-<h1>CRUD de Productos</h1>
+<div class="container">
+    <header>
+        <h1>Sistema de Gestión de Productos</h1>
+    </header>
 
-<div class="formulario">
-    <h2>Crear / Editar Producto</h2>
-    <input type="text" id="codigo" placeholder="Código">
-    <input type="text" id="nombre" placeholder="Nombre">
-    <input type="text" id="descripcion" placeholder="Descripción">
-    <input type="text" id="marca" placeholder="Marca">
-    <input type="text" id="categoria" placeholder="Categoría">
-    <input type="number" id="precio" placeholder="Precio">
-    <button id="crear">Crear Producto</button>
-    <button id="editar">Editar Producto</button>
+    <!-- Alert para mensajes -->
+    <div id="alert" class="alert hidden">
+        <span id="alertMessage"></span>
+        <button onclick="closeAlert()" class="close-btn">&times;</button>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="cambiarTab('productos')">Productos</button>
+        <button class="tab-btn" onclick="cambiarTab('categorias')">Categorías</button>
+    </div>
+
+    <!-- Barra de acciones -->
+    <div class="action-bar">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Buscar por nombre o código..." onkeyup="buscar()">
+        </div>
+        <button class="btn btn-primary" onclick="abrirModal('create')">
+            <span>+</span> Crear Nuevo
+        </button>
+    </div>
+
+    <!-- Tabla de Productos -->
+    <div id="tablaProductos" class="tabla-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Marca</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="productosBody">
+            <tr>
+                <td colspan="7" class="text-center">Cargando...</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Tabla de Categorías -->
+    <div id="tablaCategorias" class="tabla-container hidden">
+        <table>
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="categoriasBody">
+            <tr>
+                <td colspan="5" class="text-center">Cargando...</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div class="busqueda">
-    <h2>Buscar Producto</h2>
-    <input type="text" id="buscarNombre" placeholder="Buscar por nombre">
-    <input type="text" id="buscarCodigo" placeholder="Buscar por código">
-    <input type="number" id="buscarId" placeholder="Buscar por ID">
-    <button id="buscarNombreBtn">Buscar Nombre</button>
-    <button id="buscarCodigoBtn">Buscar Código</button>
-    <button id="buscarIdBtn">Buscar ID</button>
+<!-- Modal de Formulario -->
+<div id="modal" class="modal hidden">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Crear Producto</h2>
+            <button onclick="cerrarModal()" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <!-- Formulario de Producto -->
+            <div id="formProducto">
+                <div class="form-group">
+                    <label>Código *</label>
+                    <input type="text" id="prodCodigo" required minlength="4" maxlength="10" pattern="[A-Za-z0-9]+">
+                    <small>4-10 caracteres alfanuméricos, sin espacios ni caracteres especiales</small>
+                </div>
+                <div class="form-group">
+                    <label>Nombre *</label>
+                    <input type="text" id="prodNombre" required minlength="4">
+                </div>
+                <div class="form-group">
+                    <label>Descripción *</label>
+                    <textarea id="prodDescripcion" required rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Marca *</label>
+                    <input type="text" id="prodMarca" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoría *</label>
+                    <select id="prodCategoria" required>
+                        <option value="">Seleccione una categoría</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Precio *</label>
+                    <input type="number" id="prodPrecio" required step="0.01" min="0">
+                </div>
+            </div>
+
+            <!-- Formulario de Categoría -->
+            <div id="formCategoria" class="hidden">
+                <div class="form-group">
+                    <label>Código *</label>
+                    <input type="text" id="catCodigo" required maxlength="10" pattern="[A-Za-z0-9]+">
+                    <small>Sin espacios ni caracteres especiales</small>
+                </div>
+                <div class="form-group">
+                    <label>Nombre *</label>
+                    <input type="text" id="catNombre" required minlength="2">
+                </div>
+                <div class="form-group">
+                    <label>Descripción *</label>
+                    <textarea id="catDescripcion" required rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="catActivo" checked>
+                        <span>Activo</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
+            <button class="btn btn-primary" onclick="guardar()">Guardar</button>
+        </div>
+    </div>
 </div>
 
-<div class="lista">
-    <h2>Lista de Productos</h2>
-    <table id="tablaProductos">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Código</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Marca</th>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+<!-- Modal de Confirmación -->
+<div id="confirmModal" class="modal hidden">
+    <div class="modal-content modal-sm">
+        <div class="modal-header">
+            <h2>Confirmar Eliminación</h2>
+            <button onclick="cerrarConfirmModal()" class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>¿Está seguro de que desea eliminar este elemento? Esta acción no se puede deshacer.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="cerrarConfirmModal()">Cancelar</button>
+            <button class="btn btn-danger" onclick="confirmarEliminar()">Eliminar</button>
+        </div>
+    </div>
 </div>
 
-<script src="/js/index.js"></script>
+<script src="/js/app.js"></script>
 </body>
 </html>

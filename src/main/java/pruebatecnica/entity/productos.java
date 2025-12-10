@@ -12,11 +12,15 @@ public class productos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProducto;
 
+    @Column(unique = true)
     private String codigo;
+
+    @Column(unique = true)
     private String nombre;
+
     private String descripcion;
 
-    @Column(name= "marca", unique = true)
+    @Column(name = "marca")
     private String marca;
 
     @ManyToOne

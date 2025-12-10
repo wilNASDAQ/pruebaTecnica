@@ -8,7 +8,7 @@ import pruebatecnica.repository.categoriaRepository;
 import java.util.List;
 
 @Service
-public class categoriaProductosServiceImpl {
+public class categoriaProductosServiceImpl implements categoriaProductosService {
 
     @Autowired
     private categoriaRepository repo;

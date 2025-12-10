@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pruebatecnica.entity.productos;
-import pruebatecnica.services.productosServiceImpl;
+import pruebatecnica.services.productosService;
 
 import java.util.List;
 
@@ -12,11 +12,12 @@ import java.util.List;
 @RequestMapping("/productos")
 public class productosController {
 
-    private final productosServiceImpl psi;
+    private final productosService psi;
 
-    public productosController(productosServiceImpl psi) {
+    public productosController(productosService psi) {
         this.psi = psi;
     }
+
 
     @GetMapping
     public List<productos> productosTodos() {
@@ -24,12 +25,12 @@ public class productosController {
     }
 
     @PostMapping
-    public ResponseEntity<?> crearProductos(@RequestBody(required = false) productos p) {
-        if (p == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ESTE PRODUCTO NO SE ENCUENTRA EN LA BASE DE DATOS");
+    public ResponseEntity<?> crearProductos(@RequestBody productos p) {
+        try {
+            return ResponseEntity.ok(psi.crearProductos(p));
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
-        psi.crearProductos(p);
-        return ResponseEntity.ok(p);
     }
 
 

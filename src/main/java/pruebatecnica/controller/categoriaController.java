@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pruebatecnica.entity.categoriaProductos;
-import pruebatecnica.services.categoriaProductosServiceImpl;
+import pruebatecnica.services.categoriaProductosService;
 
 import java.util.List;
 
@@ -12,11 +12,12 @@ import java.util.List;
 @RequestMapping("/categorias")
 public class categoriaController {
 
-    private final categoriaProductosServiceImpl cps;
+    private final categoriaProductosService cps;
 
-    public categoriaController(categoriaProductosServiceImpl cps) {
+    public categoriaController(categoriaProductosService cps) {
         this.cps = cps;
     }
+
 
     @GetMapping
     public List<categoriaProductos> todasCategorias() {
