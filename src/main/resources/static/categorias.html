@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CATEGORIAS</title>
+    <link rel="stylesheet" href="/css/categorias.css">
+</head>
+<body>
+
+<header class="header">
+    <h1>Gestión de Categorías</h1>
+    <div class="nav-buttons">
+        <button class="btn ghost" onclick="window.location.href='index.html'">
+            Volver a Productos
+        </button>
+    </div>
+</header>
+
+<main class="container">
+
+    <!-- Crear categoría -->
+    <section class="card">
+        <h2>Crear categoría</h2>
+        <form id="formCrearCat">
+            <div class="grid-2">
+                <input id="crearCatCodigo" placeholder="Código (mín 2, sin espacios)" required />
+                <input id="crearCatNombre" placeholder="Nombre (mín 2)" required />
+            </div>
+            <textarea id="crearCatDescripcion" placeholder="Descripción"></textarea>
+            <div class="grid-2">
+                <label>Activo</label>
+                <select id="crearCatActivo">
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn primary">Crear</button>
+            </div>
+
+            <div id="msgCrearCat" class="msg"></div>
+        </form>
+    </section>
+
+    <!-- Tabla y filtro -->
+    <section class="card">
+        <h2>Categorías</h2>
+
+        <div class="filters">
+            <input id="filterCat" placeholder="Buscar por código o nombre..." />
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th><th>Código</th><th>Nombre</th><th>Descripción</th><th>Activo</th><th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="tbodyCategorias"></tbody>
+        </table>
+
+        <div id="msgListCat" class="msg"></div>
+    </section>
+
+</main>
+
+<!-- Modal editar -->
+<div id="modalCat" class="modal hidden">
+    <div class="modal-panel">
+        <h3>Editar categoría</h3>
+        <form id="formEditarCat">
+            <div class="grid-2">
+                <input name="codigo" placeholder="Código" required />
+                <input name="nombre" placeholder="Nombre" required />
+            </div>
+            <textarea name="descripcion" placeholder="Descripción"></textarea>
+            <div class="grid-2">
+                <label>Activo</label>
+                <select name="activo">
+                    <option value="true">Sí</option>
+                    <option value="false">No</option>
+                </select>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn primary">Guardar</button>
+                <button type="button" class="btn ghost" id="btnCerrarModalCat">Cancelar</button>
+            </div>
+
+            <div id="msgEditarCat" class="msg"></div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/categorias.js"></script>
+</body>
+</html>
