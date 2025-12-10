@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Productos</title>
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+<body>
+<h1>CRUD de Productos</h1>
+
+<div class="formulario">
+    <h2>Crear / Editar Producto</h2>
+    <input type="text" id="codigo" placeholder="Código">
+    <input type="text" id="nombre" placeholder="Nombre">
+    <input type="text" id="descripcion" placeholder="Descripción">
+    <input type="text" id="marca" placeholder="Marca">
+    <input type="text" id="categoria" placeholder="Categoría">
+    <input type="number" id="precio" placeholder="Precio">
+    <button id="crear">Crear Producto</button>
+    <button id="editar">Editar Producto</button>
+</div>
+
+<div class="busqueda">
+    <h2>Buscar Producto</h2>
+    <input type="text" id="buscarNombre" placeholder="Buscar por nombre">
+    <input type="text" id="buscarCodigo" placeholder="Buscar por código">
+    <input type="number" id="buscarId" placeholder="Buscar por ID">
+    <button id="buscarNombreBtn">Buscar Nombre</button>
+    <button id="buscarCodigoBtn">Buscar Código</button>
+    <button id="buscarIdBtn">Buscar ID</button>
+</div>
+
+<div class="lista">
+    <h2>Lista de Productos</h2>
+    <table id="tablaProductos">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Marca</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script src="/js/index.js"></script>
+</body>
+</html>
