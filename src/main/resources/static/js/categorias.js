@@ -10,6 +10,10 @@ const formEditarCat = document.getElementById("formEditarCat");
 const msgEditarCat = document.getElementById("msgEditarCat");
 const btnCerrarModalCat = document.getElementById("btnCerrarModalCat");
 
+// PAGINACIÓN CATEGORÍAS
+let currentPageCat = 1;
+let rowsPerPageCat = 4;
+
 let categorias = [];
 let editingIdCat = null;
 
@@ -17,7 +21,7 @@ let editingIdCat = null;
 document.addEventListener("DOMContentLoaded", () => {
     loadCategorias();
     formCrearCat.addEventListener("submit", onCrearCategoria);
-    filterCat.addEventListener("input", renderTableCategorias);
+    filterCat.addEventListener("input", () => { currentPageCat = 1; renderTableCategorias(); });
     btnCerrarModalCat.addEventListener("click", closeModalCat);
     formEditarCat.addEventListener("submit", onSubmitEditarCat);
 });
@@ -61,6 +65,7 @@ async function onCrearCategoria(e){
         }
 
         formCrearCat.reset();
+        currentPageCat = 1;
         await loadCategorias();
     } catch(err) {
         console.error(err);
@@ -68,18 +73,28 @@ async function onCrearCategoria(e){
     }
 }
 
-/* Render tabla y filtro dinámico */
+/* Render tabla con filtro + paginación */
 function renderTableCategorias(){
     const q = (filterCat.value || "").toLowerCase().trim();
-    let list = categorias.filter(c => !q || (c.codigo.toLowerCase().includes(q) || c.nombre.toLowerCase().includes(q)));
+    const filtered = categorias.filter(c => !q || (c.codigo.toLowerCase().includes(q) || c.nombre.toLowerCase().includes(q)));
+
+    // paginación
+    const total = filtered.length;
+    const pages = Math.ceil(total / rowsPerPageCat) || 1;
+    if(currentPageCat > pages) currentPageCat = pages;
+
+    const start = (currentPageCat - 1) * rowsPerPageCat;
+    const end = start + rowsPerPageCat;
+    const pageItems = filtered.slice(start, end);
 
     tbodyCategorias.innerHTML = "";
-    if(list.length === 0){
+    if(pageItems.length === 0){
         tbodyCategorias.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#666">No hay categorías</td></tr>`;
+        renderPaginationCat(total);
         return;
     }
 
-    list.forEach(c => {
+    pageItems.forEach(c => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>${c.idCategoria}</td>
@@ -94,6 +109,39 @@ function renderTableCategorias(){
         `;
         tbodyCategorias.appendChild(tr);
     });
+
+    renderPaginationCat(total);
+}
+
+/* Render paginación */
+function renderPaginationCat(total){
+    const container = document.getElementById("paginationCat");
+    const pages = Math.ceil(total / rowsPerPageCat);
+
+    if(!container) return;
+    if(pages <= 1){
+        container.innerHTML = "";
+        return;
+    }
+
+    let html = '';
+    html += `<button class="prevnext" ${currentPageCat===1 ? "disabled" : ""} onclick="goPageCat(${currentPageCat-1})">‹</button>`;
+
+    for(let i=1;i<=pages;i++){
+        const cls = i === currentPageCat ? 'active-page' : 'page-num';
+        html += `<button class="${cls}" onclick="goPageCat(${i})">${i}</button>`;
+    }
+
+    html += `<button class="prevnext" ${currentPageCat===pages ? "disabled" : ""} onclick="goPageCat(${currentPageCat+1})">›</button>`;
+
+    container.innerHTML = html;
+}
+
+/* Cambiar página */
+function goPageCat(n){
+    if(n < 1) n = 1;
+    currentPageCat = n;
+    renderTableCategorias();
 }
 
 /* Abrir modal editar */

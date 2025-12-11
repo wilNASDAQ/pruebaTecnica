@@ -53,7 +53,8 @@ body {
 }
 
 /* --- Inputs y selects --- */
-form input, form select, form textarea {
+form input, form select, form textarea,
+.filters input { /* filtro hereda mismo estilo */
     width: 100%;
     padding: 0.8rem 1rem;
     border: 1px solid #d1d1d6;
@@ -66,9 +67,10 @@ form input, form select, form textarea {
     outline: none;
 }
 
-form input:focus, form select:focus, form textarea:focus {
+form input:focus, form select:focus, form textarea:focus,
+.filters input:focus {
     border-color: #007aff;
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.2);
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.12);
     background: #fff;
 }
 
@@ -78,7 +80,8 @@ form textarea {
 }
 
 form input::placeholder,
-form textarea::placeholder {
+form textarea::placeholder,
+.filters input::placeholder {
     color: #999;
     opacity: 1;
     font-style: italic;
@@ -102,6 +105,7 @@ form textarea::placeholder {
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
+    vertical-align: middle;
 }
 
 .btn.primary {
@@ -153,6 +157,7 @@ form textarea::placeholder {
     padding: 0.8rem 1rem;
     text-align: left;
     border-bottom: 1px solid #eee;
+    vertical-align: middle;
 }
 
 .table th {
@@ -199,10 +204,17 @@ form textarea::placeholder {
     flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 1rem;
+    align-items: center;
 }
 
 .filters input {
     flex: 1;
+    margin-bottom: 0; /* corregir espacio extra */
+}
+
+.filters .btn {
+    height: 40px;
+    padding: 0 1rem;
 }
 
 /* --- Modal --- */
@@ -250,4 +262,74 @@ form textarea::placeholder {
 
 .nav-link:hover {
     text-decoration: underline;
+}
+
+/* --- Paginación (estilo azul consistente) --- */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+/* botón general */
+.pagination button {
+    padding: 0.45rem 0.85rem;
+    border: none;
+    border-radius: 10px;
+    background: #f2f2f7;
+    color: #007aff;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.18s ease-in-out;
+    min-width: 36px;
+    height: 36px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* hover ligero */
+.pagination button:hover:not(:disabled) {
+    background: #e9f0ff;
+    transform: translateY(-1px);
+}
+
+/* botón activo (página actual) */
+.pagination .active-page {
+    background: #007aff;
+    color: #fff;
+    cursor: default;
+    font-weight: 600;
+    box-shadow: 0 6px 18px rgba(0,122,255,0.14);
+    transform: none;
+}
+
+/* flechas prev/next un poco distintas visualmente */
+.pagination button.prevnext {
+    background: #ffffff;
+    border: 1px solid #e6e6eb;
+    color: #007aff;
+    min-width: 40px;
+}
+
+/* deshabilitado */
+.pagination button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* compactar cuando hay muchas páginas (responsive) */
+@media (max-width: 520px) {
+    .pagination button.page-num {
+        display: none; /* ocultar números intermedios en móvil */
+    }
+    .pagination button.page-num:first-of-type,
+    .pagination button.page-num:last-of-type,
+    .pagination .active-page {
+        display: inline-flex;
+    }
 }

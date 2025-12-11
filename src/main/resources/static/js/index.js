@@ -15,6 +15,10 @@ const msgEditar = document.getElementById("msgEditar");
 const selectEditarCategoria = document.getElementById("selectEditarCategoria");
 const btnCerrarModal = document.getElementById("btnCerrarModal");
 
+// PAGINACIÓN
+let currentPage = 1;
+let rowsPerPage = 5;
+
 let productos = [];
 let categorias = [];
 let editingId = null;
@@ -25,8 +29,8 @@ document.addEventListener("DOMContentLoaded", () => {
     loadProductos();
 
     formCrear.addEventListener("submit", onCrearProducto);
-    filterText.addEventListener("input", renderTable);
-    btnReset.addEventListener("click", () => { filterText.value=""; renderTable(); });
+    filterText.addEventListener("input", () => { currentPage = 1; renderTable(); });
+    btnReset.addEventListener("click", () => { filterText.value=""; currentPage = 1; renderTable(); });
 
     btnCerrarModal.addEventListener("click", closeModal);
     formEditar.addEventListener("submit", onSubmitEditar);
@@ -133,13 +137,19 @@ async function loadProductos(){
 
 function renderTable(){
     const q = filterText.value.toLowerCase().trim();
+
     const list = productos.filter(p =>
         (!q) || p.codigo.toLowerCase().includes(q) || p.nombre.toLowerCase().includes(q)
     );
 
-    tbodyProductos.innerHTML = list.length === 0
+    // PAGINACIÓN
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const pageItems = list.slice(start, end);
+
+    tbodyProductos.innerHTML = pageItems.length === 0
         ? `<tr><td colspan="7" style="text-align:center;">Sin productos</td></tr>`
-        : list.map(p => `
+        : pageItems.map(p => `
             <tr>
                 <td>${p.idProducto}</td>
                 <td>${p.codigo}</td>
@@ -153,6 +163,40 @@ function renderTable(){
                 </td>
             </tr>
         `).join("");
+
+    renderPagination(list.length);
+}
+
+function renderPagination(total){
+    const container = document.getElementById("pagination");
+    const pages = Math.ceil(total / rowsPerPage);
+
+    if(pages <= 1){
+        container.innerHTML = "";
+        return;
+    }
+
+    // construir botones: prev, números, next
+    let html = '';
+    html += `<button ${currentPage===1 ? "disabled" : ""} onclick="goPage(${currentPage-1})">‹</button>`;
+
+    for(let i=1;i<=pages;i++){
+        if(i === currentPage){
+            html += `<button class="active-page" onclick="goPage(${i})">${i}</button>`;
+        } else {
+            html += `<button onclick="goPage(${i})">${i}</button>`;
+        }
+    }
+
+    html += `<button ${currentPage===pages ? "disabled" : ""} onclick="goPage(${currentPage+1})">›</button>`;
+
+    container.innerHTML = html;
+}
+
+function goPage(n){
+    if(n < 1) n = 1;
+    currentPage = n;
+    renderTable();
 }
 
 /* ---------------------------
