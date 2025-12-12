@@ -35,6 +35,6 @@ public class productos {
     @NotNull(message = "SELECCIONE UNA CATEGORIA")
     private categoriaProductos categoria;
 
-    @Positive(message = "EL PRECIO DEBE SER MAYOR QUE O")
+    @Min(value = 1000000, message = "EL PRECIO DEBE SER MAYOR QUE 1.000.000")
     private float precio;
 }
