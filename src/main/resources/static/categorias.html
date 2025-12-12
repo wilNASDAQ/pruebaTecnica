@@ -24,8 +24,8 @@
         <h2>Crear categoría</h2>
         <form id="formCrearCat">
             <div class="grid-2">
-                <input id="crearCatCodigo" placeholder="Código (mín 2, sin espacios)" required />
-                <input id="crearCatNombre" placeholder="Nombre (mín 2)" required />
+                <input id="crearCatCodigo" placeholder="Código (mín 2, sin espacios)" />
+                <input id="crearCatNombre" placeholder="Nombre (mín 2)" />
             </div>
             <textarea id="crearCatDescripcion" placeholder="Descripción"></textarea>
             <div class="grid-2">
@@ -39,8 +39,6 @@
             <div class="actions">
                 <button type="submit" class="btn primary">Crear</button>
             </div>
-
-            <div id="msgCrearCat" class="msg"></div>
         </form>
     </section>
 
@@ -63,8 +61,6 @@
 
         <!-- PAGINACIÓN -->
         <div id="paginationCat" class="pagination"></div>
-
-        <div id="msgListCat" class="msg"></div>
     </section>
 
 </main>
@@ -75,8 +71,8 @@
         <h3>Editar categoría</h3>
         <form id="formEditarCat">
             <div class="grid-2">
-                <input name="codigo" placeholder="Código" required />
-                <input name="nombre" placeholder="Nombre" required />
+                <input name="codigo" placeholder="Código" />
+                <input name="nombre" placeholder="Nombre" />
             </div>
             <textarea name="descripcion" placeholder="Descripción"></textarea>
             <div class="grid-2">
@@ -91,11 +87,12 @@
                 <button type="submit" class="btn primary">Guardar</button>
                 <button type="button" class="btn ghost" id="btnCerrarModalCat">Cancelar</button>
             </div>
-
-            <div id="msgEditarCat" class="msg"></div>
         </form>
     </div>
 </div>
+
+<!-- Contenedor para toasts -->
+<div id="toast-container"></div>
 
 <script src="/js/categorias.js"></script>
 </body>

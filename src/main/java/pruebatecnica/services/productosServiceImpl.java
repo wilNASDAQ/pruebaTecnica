@@ -3,6 +3,7 @@ package pruebatecnica.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pruebatecnica.entity.productos;
+import pruebatecnica.repository.categoriaRepository;
 import pruebatecnica.repository.productosRepository;
 
 import java.util.List;
@@ -13,24 +14,22 @@ public class productosServiceImpl implements productosService {
     @Autowired
     private productosRepository repo;
 
+    @Autowired
+    private categoriaRepository categoriaRepo;
+
     public List<productos> getproductos() {
         return repo.findAll();
     }
 
-    public boolean codigoExiste(String codigo) {
-        return repo.findByCodigo(codigo).isPresent();
-    }
-
-    public boolean nombreExiste(String nombre) {
-        return repo.findByNombre(nombre).isPresent();
-    }
-
     public productos crearProductos(productos pd) {
-        if (codigoExiste(pd.getCodigo())) {
-            throw new RuntimeException("ESE CODIGO YA EXISTE");
+        if (pd.getCategoria() == null || categoriaRepo.findById(pd.getCategoria().getIdCategoria()).isEmpty()) {
+            throw new IllegalArgumentException("LA CATEGORIA NO EXISTE");
         }
-        if (nombreExiste(pd.getNombre())) {
-            throw new RuntimeException("ESE NOMBRE YA EXISTE");
+        if (repo.findByCodigo(pd.getCodigo()).isPresent()) {
+            throw new IllegalArgumentException("EL CÓDIGO YA EXISTE");
+        }
+        if (repo.findByNombre(pd.getNombre()).isPresent()) {
+            throw new IllegalArgumentException("EL NOMBRE YA EXISTE");
         }
         return repo.save(pd);
     }
@@ -61,19 +60,26 @@ public class productosServiceImpl implements productosService {
     public productos editarProducto(long id, productos modificacion) {
         productos pd = productosPorId(id);
 
-        if (pd != null) {
+        repo.findByCodigo(modificacion.getCodigo()).filter(p -> p.getIdProducto() != id)
+                .ifPresent(p -> {
+                    throw new IllegalArgumentException("EL CÓDIGO YA EXISTE");
+                });
 
-            pd.setCodigo(modificacion.getCodigo());
-            pd.setNombre(modificacion.getNombre());
-            pd.setDescripcion(modificacion.getDescripcion());
-            pd.setMarca(modificacion.getMarca());
-            pd.setCategoria(modificacion.getCategoria());
-            pd.setPrecio(modificacion.getPrecio());
+        repo.findByNombre(modificacion.getNombre()).filter(p -> p.getIdProducto() != id)
+                .ifPresent(p -> {
+                    throw new IllegalArgumentException("EL NOMBRE YA EXISTE");
+                });
 
-            return repo.save(pd);
-        }
-        return null;
+        pd.setCodigo(modificacion.getCodigo());
+        pd.setNombre(modificacion.getNombre());
+        pd.setDescripcion(modificacion.getDescripcion());
+        pd.setMarca(modificacion.getMarca());
+        pd.setCategoria(modificacion.getCategoria());
+        pd.setPrecio(modificacion.getPrecio());
+
+        return repo.save(pd);
     }
+
 
 
 }

@@ -54,7 +54,7 @@ body {
 
 /* --- Inputs y selects --- */
 form input, form select, form textarea,
-.filters input { /* filtro hereda mismo estilo */
+.filters input {
     width: 100%;
     padding: 0.8rem 1rem;
     border: 1px solid #d1d1d6;
@@ -134,13 +134,6 @@ form textarea::placeholder,
     margin-top: 1rem;
 }
 
-/* --- Mensajes --- */
-.msg {
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
-    color: #ff3b30;
-}
-
 /* --- Tabla --- */
 .table {
     width: 100%;
@@ -209,7 +202,7 @@ form textarea::placeholder,
 
 .filters input {
     flex: 1;
-    margin-bottom: 0; /* corregir espacio extra */
+    margin-bottom: 0;
 }
 
 .filters .btn {
@@ -252,19 +245,35 @@ form textarea::placeholder,
     color: #111;
 }
 
-/* --- Links estilo navegación --- */
-.nav-link {
-    color: #007aff;
-    text-decoration: none;
+/* --- Toast --- */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
+}
+
+.toast {
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    color: #fff;
     font-weight: 500;
-    transition: all 0.2s ease-in-out;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    animation: fadeInOut 4s forwards;
 }
 
-.nav-link:hover {
-    text-decoration: underline;
+.toast.error { background-color: #ff3b30; }
+.toast.success { background-color: #34c759; }
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateX(50%); }
+    10% { opacity: 1; transform: translateX(0); }
+    90% { opacity: 1; transform: translateX(0); }
+    100% { opacity: 0; transform: translateX(50%); }
 }
 
-/* --- Paginación (estilo azul consistente) --- */
+/* --- Paginación --- */
 .pagination {
     display: flex;
     justify-content: center;
@@ -274,7 +283,6 @@ form textarea::placeholder,
     flex-wrap: wrap;
 }
 
-/* botón general */
 .pagination button {
     padding: 0.45rem 0.85rem;
     border: none;
@@ -291,13 +299,11 @@ form textarea::placeholder,
     align-items: center;
 }
 
-/* hover ligero */
 .pagination button:hover:not(:disabled) {
     background: #e9f0ff;
     transform: translateY(-1px);
 }
 
-/* botón activo (página actual) */
 .pagination .active-page {
     background: #007aff;
     color: #fff;
@@ -307,29 +313,16 @@ form textarea::placeholder,
     transform: none;
 }
 
-/* flechas prev/next un poco distintas visualmente */
-.pagination button.prevnext {
-    background: #ffffff;
-    border: 1px solid #e6e6eb;
-    color: #007aff;
-    min-width: 40px;
-}
-
-/* deshabilitado */
 .pagination button:disabled {
     opacity: 0.45;
     cursor: not-allowed;
     transform: none;
 }
 
-/* compactar cuando hay muchas páginas (responsive) */
+/* Responsive paginación */
 @media (max-width: 520px) {
-    .pagination button.page-num {
-        display: none; /* ocultar números intermedios en móvil */
-    }
-    .pagination button.page-num:first-of-type,
-    .pagination button.page-num:last-of-type,
-    .pagination .active-page {
-        display: inline-flex;
+    .pagination button {
+        font-size: 0.8rem;
+        padding: 0.35rem 0.65rem;
     }
 }

@@ -17,22 +17,16 @@ public class categoriaProductosServiceImpl implements categoriaProductosService 
         return repo.findAll();
     }
 
-    public boolean codigoExiste(String codigo) {
-        return repo.findByCodigo(codigo).isPresent();
-    }
-
-    public boolean nombreExiste(String nombre) {
-        return repo.findByNombre(nombre).isPresent();
-    }
 
     public categoriaProductos crearCategoria(categoriaProductos cat) {
-        if (codigoExiste(cat.getCodigo())) {
-            throw new RuntimeException("ESE CÓDIGO YA EXISTE");
+        if (repo.findByCodigo(cat.getCodigo()).isPresent()) {
+            throw new IllegalArgumentException("EL CÓDIGO YA EXISTE");
         }
-        if (nombreExiste(cat.getNombre())) {
-            throw new RuntimeException("ESE NOMBRE YA EXISTE");
+        if (repo.findByNombre(cat.getNombre()).isPresent()) {
+            throw new IllegalArgumentException("EL NOMBRE YA EXISTE");
         }
         return repo.save(cat);
+
     }
 
     public categoriaProductos categoriaPorId(Long id) {
@@ -42,15 +36,22 @@ public class categoriaProductosServiceImpl implements categoriaProductosService 
     public categoriaProductos editarCategoria(Long id, categoriaProductos modificacion) {
         categoriaProductos cat = categoriaPorId(id);
 
-        if (cat != null) {
-            cat.setCodigo(modificacion.getCodigo());
-            cat.setNombre(modificacion.getNombre());
-            cat.setDescripcion(modificacion.getDescripcion());
-            cat.setActivo(modificacion.getActivo());
-            return repo.save(cat);
-        }
+        repo.findByCodigo(modificacion.getCodigo()).filter(p -> p.getIdCategoria() != id)
+                .ifPresent(p -> {
+                    throw new IllegalArgumentException("EL CÓDIGO YA EXISTE");
+                });
 
-        return null;
+        repo.findByNombre(modificacion.getNombre()).filter(p -> p.getIdCategoria() != id)
+                .ifPresent(p -> {
+                    throw new IllegalArgumentException("EL NOMBRE YA EXISTE");
+                });
+
+        cat.setCodigo(modificacion.getCodigo());
+        cat.setNombre(modificacion.getNombre());
+        cat.setDescripcion(modificacion.getDescripcion());
+        cat.setActivo(modificacion.getActivo());
+        return repo.save(cat);
+
     }
 
     public categoriaProductos eliminarCategoria(Long id) {

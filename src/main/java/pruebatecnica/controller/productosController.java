@@ -1,5 +1,6 @@
 package pruebatecnica.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,9 @@ public class productosController {
     }
 
     @PostMapping
-    public ResponseEntity<?> crearProductos(@RequestBody productos p) {
-        try {
-            return ResponseEntity.ok(psi.crearProductos(p));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<?> crearProductos(@Valid @RequestBody productos p) {
+
+        return ResponseEntity.ok(psi.crearProductos(p));
     }
 
 
@@ -73,7 +71,7 @@ public class productosController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editarProducto(@PathVariable long id, @RequestBody productos p) {
+    public ResponseEntity<?> editarProducto(@PathVariable long id,@Valid @RequestBody productos p) {
         productos pd = psi.editarProducto(id, p);
         if (pd == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("ESTE PRODUCTO NO SE ENCUENTRA EN LA BASE DE DATOS");

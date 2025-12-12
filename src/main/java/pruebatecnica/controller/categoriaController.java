@@ -1,5 +1,6 @@
 package pruebatecnica.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +26,8 @@ public class categoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> crearCategoria(@RequestBody categoriaProductos cat) {
-        try {
-            return ResponseEntity.ok(cps.crearCategoria(cat));
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<?> crearCategoria(@Valid @RequestBody categoriaProductos cat) {
+        return ResponseEntity.ok(cps.crearCategoria(cat));
     }
 
     @GetMapping("/{id}")
@@ -43,7 +40,7 @@ public class categoriaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> editarCategoria(@PathVariable Long id, @RequestBody categoriaProductos cat) {
+    public ResponseEntity<?> editarCategoria(@PathVariable Long id, @Valid @RequestBody categoriaProductos cat) {
         categoriaProductos editada = cps.editarCategoria(id, cat);
         if (editada == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("CATEGORÍA NO ENCONTRADA");

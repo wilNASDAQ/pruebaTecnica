@@ -8,10 +8,6 @@ public interface categoriaProductosService {
 
     List<categoriaProductos> getCategorias();
 
-    boolean codigoExiste(String codigo);
-
-    boolean nombreExiste(String nombre);
-
     categoriaProductos crearCategoria(categoriaProductos cat);
 
     categoriaProductos categoriaPorId(Long id);

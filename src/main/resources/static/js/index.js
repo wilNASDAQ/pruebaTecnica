@@ -1,21 +1,19 @@
-// Rutas
 const URL_PRODUCTOS = "/productos";
 const URL_CATEGORIAS = "/categorias";
 
 /* DOM */
 const formCrear = document.getElementById("formCrear");
-const msgCrear = document.getElementById("msgCrear");
 const tbodyProductos = document.getElementById("tbodyProductos");
 const filterText = document.getElementById("filterText");
 const btnReset = document.getElementById("btnReset");
 
 const modal = document.getElementById("modal");
 const formEditar = document.getElementById("formEditar");
-const msgEditar = document.getElementById("msgEditar");
 const selectEditarCategoria = document.getElementById("selectEditarCategoria");
 const btnCerrarModal = document.getElementById("btnCerrarModal");
 
-// PAGINACIÓN
+const toastContainer = document.getElementById("toastContainer");
+
 let currentPage = 1;
 let rowsPerPage = 5;
 
@@ -34,68 +32,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     btnCerrarModal.addEventListener("click", closeModal);
     formEditar.addEventListener("submit", onSubmitEditar);
-
-    initLiveValidation();
 });
 
 /* ============================
-   VALIDACIÓN EN TIEMPO REAL
+          TOAST
 ============================ */
-
-const rules = {
-    codigo: v => v.length >= 4 && !v.includes(" "),
-    nombre: v => v.length >= 4,
-    precio: v => !isNaN(v) && parseFloat(v) > 0
-};
-
-function showError(input, msg){
-    let box = input.parentElement.querySelector(".input-error");
-    if(!box){
-        box = document.createElement("div");
-        box.className = "input-error";
-        input.parentElement.appendChild(box);
-    }
-    box.textContent = msg;
-    input.classList.add("invalid");
-}
-
-function clearError(input){
-    let box = input.parentElement.querySelector(".input-error");
-    if(box) box.textContent = "";
-    input.classList.remove("invalid");
-}
-
-function initLiveValidation(){
-    ["crearCodigo","crearNombre","crearPrecio"].forEach(id => {
-        const input = document.getElementById(id);
-        const key = id.replace("crear","").toLowerCase();
-
-        input.addEventListener("input", () => {
-            const v = input.value.trim();
-
-            if(!rules[key](v)){
-                if(key==="codigo") showError(input, "Mínimo 4 caracteres, sin espacios");
-                if(key==="nombre") showError(input, "Mínimo 4 caracteres");
-                if(key==="precio") showError(input, "Debe ser un número mayor a 0");
-            } else {
-                clearError(input);
-            }
-        });
-    });
-}
-
-function validateCrear(){
-    let ok = true;
-
-    const codigo = document.getElementById("crearCodigo");
-    const nombre = document.getElementById("crearNombre");
-    const precio = document.getElementById("crearPrecio");
-
-    if(!rules.codigo(codigo.value.trim())){ showError(codigo, "Código inválido"); ok=false; }
-    if(!rules.nombre(nombre.value.trim())){ showError(nombre, "Nombre inválido"); ok=false; }
-    if(!rules.precio(precio.value.trim())){ showError(precio, "Precio inválido"); ok=false; }
-
-    return ok;
+function showToast(message, type="error") {
+    const div = document.createElement("div");
+    div.className = `toast ${type}`;
+    div.textContent = message;
+    toastContainer.appendChild(div);
+    setTimeout(() => div.remove(), 4000);
 }
 
 /* ============================
@@ -107,6 +54,7 @@ async function loadCategorias(){
         categorias = await res.json();
     } catch {
         categorias = [];
+        showToast("Error cargando categorías");
     }
 }
 
@@ -131,18 +79,17 @@ async function loadProductos(){
         renderTable();
     } catch {
         productos = [];
+        showToast("Error cargando productos");
         renderTable();
     }
 }
 
 function renderTable(){
     const q = filterText.value.toLowerCase().trim();
-
     const list = productos.filter(p =>
         (!q) || p.codigo.toLowerCase().includes(q) || p.nombre.toLowerCase().includes(q)
     );
 
-    // PAGINACIÓN
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
     const pageItems = list.slice(start, end);
@@ -176,20 +123,14 @@ function renderPagination(total){
         return;
     }
 
-    // construir botones: prev, números, next
     let html = '';
     html += `<button ${currentPage===1 ? "disabled" : ""} onclick="goPage(${currentPage-1})">‹</button>`;
 
     for(let i=1;i<=pages;i++){
-        if(i === currentPage){
-            html += `<button class="active-page" onclick="goPage(${i})">${i}</button>`;
-        } else {
-            html += `<button onclick="goPage(${i})">${i}</button>`;
-        }
+        html += `<button class="${i===currentPage?'active-page':''}" onclick="goPage(${i})">${i}</button>`;
     }
 
     html += `<button ${currentPage===pages ? "disabled" : ""} onclick="goPage(${currentPage+1})">›</button>`;
-
     container.innerHTML = html;
 }
 
@@ -205,18 +146,13 @@ function goPage(n){
 async function onCrearProducto(e){
     e.preventDefault();
 
-    if(!validateCrear()){
-        msgCrear.textContent = "Corrige los campos antes de continuar.";
-        return;
-    }
-
     const payload = {
-        codigo: crearCodigo.value.trim(),
-        nombre: crearNombre.value.trim(),
-        marca: crearMarca.value.trim(),
-        descripcion: crearDescripcion.value.trim(),
-        precio: parseFloat(crearPrecio.value),
-        categoria: crearCategoria.value ? { idCategoria: parseInt(crearCategoria.value) } : null
+        codigo: document.getElementById("crearCodigo").value.trim(),
+        nombre: document.getElementById("crearNombre").value.trim(),
+        marca: document.getElementById("crearMarca").value.trim(),
+        descripcion: document.getElementById("crearDescripcion").value.trim(),
+        precio: parseFloat(document.getElementById("crearPrecio").value),
+        categoria: document.getElementById("crearCategoria").value ? { idCategoria: parseInt(document.getElementById("crearCategoria").value) } : null
     };
 
     try {
@@ -227,14 +163,16 @@ async function onCrearProducto(e){
         });
 
         if(!res.ok){
-            msgCrear.textContent = await res.text();
+            const text = await res.text();
+            showToast(text);
             return;
         }
 
         formCrear.reset();
         await loadProductos();
+        showToast("Producto creado con éxito", "success");
     } catch {
-        msgCrear.textContent = "Error de conexión";
+        showToast("Error de conexión");
     }
 }
 
@@ -243,7 +181,6 @@ async function onCrearProducto(e){
 ---------------------------- */
 async function abrirEditar(id){
     editingId = id;
-    msgEditar.textContent = "";
 
     const res = await fetch(`${URL_PRODUCTOS}/id/${id}`);
     const p = await res.json();
@@ -283,12 +220,14 @@ async function onSubmitEditar(e){
     });
 
     if(!res.ok){
-        msgEditar.textContent = await res.text();
+        const text = await res.text();
+        showToast(text);
         return;
     }
 
     closeModal();
     await loadProductos();
+    showToast("Producto editado con éxito", "success");
 }
 
 /* ---------------------------
@@ -298,5 +237,11 @@ async function eliminarProducto(id){
     if(!confirm("¿Seguro que deseas eliminar este producto?")) return;
 
     const res = await fetch(`${URL_PRODUCTOS}/${id}`, { method:"DELETE" });
+    if(!res.ok){
+        const text = await res.text();
+        showToast(text);
+        return;
+    }
     await loadProductos();
+    showToast("Producto eliminado", "success");
 }

@@ -8,10 +8,6 @@ public interface productosService {
 
     List<productos> getproductos();
 
-    boolean codigoExiste(String codigo);
-
-    boolean nombreExiste(String nombre);
-
     productos crearProductos(productos pd);
 
     productos productosPorId(long id);
