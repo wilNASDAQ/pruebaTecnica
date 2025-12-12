@@ -11,8 +11,11 @@
 <header class="header">
     <h1>Gestión de Categorías</h1>
     <div class="nav-buttons">
-        <button class="btn ghost" onclick="window.location.href='index.html'">
-            Volver a Productos
+        <button class="btn primary" onclick="window.location.href='index.html'">
+            Ver Productos
+        </button>
+        <button class="btn ghost" onclick="window.location.href='resumen.html'">
+            Ver Resumen
         </button>
     </div>
 </header>
@@ -23,8 +26,8 @@
         <h2>Crear categoría</h2>
         <form id="formCrearCat">
             <div class="grid-2">
-                <input id="crearCatCodigo" placeholder="Código (mín 2, sin espacios)" />
-                <input id="crearCatNombre" placeholder="Nombre (mín 2)" />
+                <input id="crearCatCodigo" placeholder="Código (mín 2, sin espacios)" oninput="this.value = this.value.replace(/\s/g, '')" />
+                <input id="crearCatNombre" placeholder="Nombre (mín 2)" oninput="this.value = this.value.replace(/\s/g, '')" />
             </div>
             <textarea id="crearCatDescripcion" placeholder="Descripción"></textarea>
             <div class="grid-2">
@@ -45,7 +48,7 @@
         <h2>Categorías</h2>
 
         <div class="filters">
-            <input id="filterCat" placeholder="Buscar por código o nombre..." />
+            <input id="filterCat" placeholder="Buscar por código o nombre..." oninput="this.value = this.value.replace(/\s/g, '')" />
         </div>
 
         <table class="table">
@@ -67,8 +70,8 @@
         <h3>Editar categoría</h3>
         <form id="formEditarCat">
             <div class="grid-2">
-                <input name="codigo" placeholder="Código" />
-                <input name="nombre" placeholder="Nombre" />
+                <input name="codigo" placeholder="Código" oninput="this.value = this.value.replace(/\s/g, '')" />
+                <input name="nombre" placeholder="Nombre" oninput="this.value = this.value.replace(/\s/g, '')" />
             </div>
             <textarea name="descripcion" placeholder="Descripción"></textarea>
             <div class="grid-2">

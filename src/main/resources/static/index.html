@@ -14,6 +14,9 @@
         <button class="btn primary" onclick="window.location.href='categorias.html'">
             Ver Categorías
         </button>
+        <button class="btn ghost" onclick="window.location.href='resumen.html'">
+            Ver Resumen
+        </button>
     </div>
 </header>
 
@@ -23,13 +26,13 @@
         <h2>Crear producto</h2>
         <form id="formCrear">
             <div class="grid-2">
-                <input id="crearCodigo" placeholder="Código (mín 4, sin espacios)" />
-                <input id="crearNombre" placeholder="Nombre (mín 4)" />
+                <input id="crearCodigo" placeholder="Código (mín 4, sin espacios)" oninput="this.value = this.value.replace(/\s/g, '')" />
+                <input id="crearNombre" placeholder="Nombre (mín 4)" oninput="this.value = this.value.replace(/\s/g, '')" />
             </div>
 
             <div class="grid-2">
-                <input id="crearMarca" placeholder="Marca" />
-                <input id="crearPrecio" placeholder="Precio" type="number" step="0.01" />
+                <input id="crearMarca" placeholder="Marca" oninput="this.value = this.value.replace(/\s/g, '')" />
+                <input id="crearPrecio" placeholder="Precio" type="number" step="0.01" oninput="this.value = this.value.replace(/\s/g, '')" />
             </div>
 
             <textarea id="crearDescripcion" placeholder="Descripción"></textarea>
@@ -48,7 +51,7 @@
         <h2>Productos</h2>
 
         <div class="filters">
-            <input id="filterText" placeholder="Buscar por código o nombre..." />
+            <input id="filterText" placeholder="Buscar por código o nombre..." oninput="this.value = this.value.replace(/\s/g, '')" />
             <button id="btnReset" class="btn ghost">Reset</button>
         </div>
 
@@ -70,12 +73,12 @@
         <h3>Editar producto</h3>
         <form id="formEditar">
             <div class="grid-2">
-                <input name="codigo" placeholder="Código" />
-                <input name="nombre" placeholder="Nombre" />
+                <input name="codigo" placeholder="Código" oninput="this.value = this.value.replace(/\s/g, '')" />
+                <input name="nombre" placeholder="Nombre" oninput="this.value = this.value.replace(/\s/g, '')" />
             </div>
             <div class="grid-2">
-                <input name="marca" placeholder="Marca" />
-                <input name="precio" placeholder="Precio" type="number" step="0.01" />
+                <input name="marca" placeholder="Marca" oninput="this.value = this.value.replace(/\s/g, '')" />
+                <input name="precio" placeholder="Precio" type="number" step="0.01" oninput="this.value = this.value.replace(/\s/g, '')" />
             </div>
             <textarea name="descripcion" placeholder="Descripción"></textarea>
             <label>Categoría</label>

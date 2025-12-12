@@ -21,6 +21,16 @@ let categorias = [];
 let editingId = null;
 
 /*
+   FUNCIÓN PARA FORMATEAR NÚMEROS
+*/
+function formatearNumero(numero) {
+    return numero.toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+/*
    INIT
 */
 document.addEventListener("DOMContentLoaded", () => {
@@ -111,10 +121,10 @@ function renderTable() {
                 <td>${p.nombre}</td>
                 <td>${p.marca || "-"}</td>
                 <td>${p.categoria?.nombre || "-"}</td>
-                <td>${p.precio}</td>
+                <td>$${formatearNumero(p.precio)}</td>
                 <td>
-                    <button class="btn primary" onclick="abrirEditar(${p.idProducto})">Editar</button>
-                    <button class="btn ghost" onclick="eliminarProducto(${p.idProducto})">Eliminar</button>
+                    <button class="action-btn edit" onclick="abrirEditar(${p.idProducto})">Editar</button>
+                    <button class="action-btn del" onclick="eliminarProducto(${p.idProducto})">Eliminar</button>
                 </td>
             </tr>
         `).join("");
@@ -244,7 +254,7 @@ async function onSubmitEditar(e) {
    ELIMINAR
 */
 async function eliminarProducto(id) {
-    if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
+    if (!confirm("SEGURO QUE QUIERES ELIMINAR ESTE PRODUCTO?")) return;
 
     const res = await fetch(`${URL_PRODUCTOS}/${id}`, {method: "DELETE"});
     if (!res.ok) {

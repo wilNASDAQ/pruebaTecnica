@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Resumen de Productos</title>
+    <link rel="stylesheet" href="/css/resumen.css">
+</head>
+<body>
+
+<header class="header">
+    <h1>Resumen de Productos</h1>
+    <div class="nav-buttons">
+        <button class="btn primary" onclick="window.location.href='index.html'">
+            Ver Productos
+        </button>
+        <button class="btn ghost" onclick="window.location.href='categorias.html'">
+            Ver Categorías
+        </button>
+    </div>
+</header>
+
+<main class="container">
+    <section class="card">
+        <h2>Estadísticas Generales</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total de productos</h3>
+                <p id="totalProductos">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Producto más barato</h3>
+                <p id="productoMasBarato">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Producto más caro</h3>
+                <p id="productoMasCaro">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Precio promedio</h3>
+                <p id="precioPromedio">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Suma total del inventario</h3>
+                <p id="sumaTotalInventario">0</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2>Productos por Categoría</h2>
+        <ul id="categorias"></ul>
+        <p id="categoriaMasProductos"></p>
+    </section>
+</main>
+
+<script src="/js/resumen.js"></script>
+</body>
+</html>

@@ -14,10 +14,11 @@ public class categoriaProductos {
     private Long idCategoria;
 
     @NotBlank(message = "COLOQUE EL CODIGO")
-    @Size(min = 4, max = 10, message = "EL CODIGO DEBE DE TENER ENTRE MINIMO Y MAXIMO 4-1O CARACTERES")
-    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "NO SE ACEPTAN CARACTERES ESPECIALES")
+    @Size(min = 2, max = 10, message = "EL CODIGO DEBE TENER ENTRE 2 Y 10 CARACTERES")
+    @Pattern(regexp = "^[A-Za-z0-9]+$", message = "NO SE ACEPTAN CARACTERES ESPECIALES NI ESPACIOS")
     @Column(unique = true)
     private String codigo;
+
 
     @NotBlank(message = "COLOQUE EL NOMBRE")
     @Size(min = 2, message = "EL NOMBRE DEBE DE TENER MINIMO 2 CARACTERES")
@@ -29,4 +30,5 @@ public class categoriaProductos {
 
     @NotNull(message = "MARQUE SI ESTA ACTIVO")
     private Boolean activo;
+
 }
