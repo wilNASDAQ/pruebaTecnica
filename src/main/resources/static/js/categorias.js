@@ -57,7 +57,7 @@ async function loadCategorias() {
     } catch {
         categorias = [];
         renderTableCategorias();
-        showToast("Error cargando categorías");
+        showToast("ERROR");
     }
 }
 
@@ -83,14 +83,14 @@ async function onCrearCategoria(e) {
 
         if (!res.ok) {
             const msg = await res.text();
-            showToast(msg || "Error creando categoría");
+            showToast(msg || "ERROR");
             return;
         }
 
         formCrearCat.reset();
         currentPageCat = 1;
         await loadCategorias();
-        showToast("Categoría creada correctamente", "success");
+        showToast("CATEGORIA CREADA", "success");
     } catch {
         showToast("ERROR");
     }
@@ -224,9 +224,9 @@ async function onSubmitEditarCat(e) {
 
         closeModalCat();
         await loadCategorias();
-        showToast("CATEGORIA EDITADA CON EXTIO", "success");
+        showToast("CATEGORIA ACTUALIZADA", "success");
     } catch {
-        showToast("ERROR DE CONEXION");
+        showToast("ERROR");
     }
 }
 
@@ -241,9 +241,9 @@ async function eliminarCat(id) {
             showToast(await res.text());
             return;
         }
-        showToast("CATEGORIA ELIMINADA CON EXTIO", "success");
+        showToast("CATEGORIA ELIMINADA", "success");
         await loadCategorias();
     } catch {
-        showToast("ERROR DE CONEXION");
+        showToast("ERROR");
     }
 }

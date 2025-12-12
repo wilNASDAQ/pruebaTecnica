@@ -72,7 +72,7 @@ async function loadCategorias() {
         categorias = await res.json();
     } catch {
         categorias = [];
-        showToast("Error cargando categorías");
+        showToast("ERROR");
     }
 }
 
@@ -97,7 +97,7 @@ async function loadProductos() {
         renderTable();
     } catch {
         productos = [];
-        showToast("Error cargando productos");
+        showToast("ERROR");
         renderTable();
     }
 }
@@ -105,8 +105,7 @@ async function loadProductos() {
 function renderTable() {
     const q = filterText.value.toLowerCase().trim();
     const list = productos.filter(p =>
-        (!q) || p.codigo.toLowerCase().includes(q) || p.nombre.toLowerCase().includes(q)
-    );
+        (!q) || p.codigo.toLowerCase().includes(q) || p.nombre.toLowerCase().includes(q));
 
     const start = (currentPage - 1) * rowsPerPage;
     const end = start + rowsPerPage;
@@ -188,9 +187,9 @@ async function onCrearProducto(e) {
 
         formCrear.reset();
         await loadProductos();
-        showToast("Producto creado con éxito", "success");
+        showToast("PRODUCTO CREADO", "success");
     } catch {
-        showToast("Error de conexión");
+        showToast("ERROR");
     }
 }
 
@@ -247,7 +246,7 @@ async function onSubmitEditar(e) {
 
     closeModal();
     await loadProductos();
-    showToast("Producto editado con éxito", "success");
+    showToast("PRODUCTO ACTUALIZADO", "success");
 }
 
 /*
@@ -263,5 +262,5 @@ async function eliminarProducto(id) {
         return;
     }
     await loadProductos();
-    showToast("Producto eliminado", "success");
+    showToast("PRODUCTO ELIMINADO", "success");
 }

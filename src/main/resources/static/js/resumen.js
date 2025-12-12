@@ -12,7 +12,7 @@ async function cargarEstadisticas() {
         const productos = await res.json();
 
         if (!productos.length) {
-            console.log("No hay productos para mostrar");
+            console.log("NO HAY PRODUCTOS");
             return;
         }
 
@@ -81,7 +81,7 @@ async function cargarEstadisticas() {
             `🏆 La categoría con más productos es: ${categoriaMasProductos.nombre} (${categoriaMasProductos.cantidad} productos)`;
 
     } catch (error) {
-        console.error("Error al cargar estadísticas:", error);
+        console.error("ERROR:", error);
     }
 }
 
