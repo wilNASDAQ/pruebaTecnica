@@ -1,7 +1,6 @@
 const URL_PRODUCTOS = "/productos";
 const URL_CATEGORIAS = "/categorias";
 
-/* DOM */
 const formCrear = document.getElementById("formCrear");
 const tbodyProductos = document.getElementById("tbodyProductos");
 const filterText = document.getElementById("filterText");
@@ -21,23 +20,32 @@ let productos = [];
 let categorias = [];
 let editingId = null;
 
-/* INIT */
+/*
+   INIT
+*/
 document.addEventListener("DOMContentLoaded", () => {
     loadCategorias().then(populateSelects);
     loadProductos();
 
     formCrear.addEventListener("submit", onCrearProducto);
-    filterText.addEventListener("input", () => { currentPage = 1; renderTable(); });
-    btnReset.addEventListener("click", () => { filterText.value=""; currentPage = 1; renderTable(); });
+    filterText.addEventListener("input", () => {
+        currentPage = 1;
+        renderTable();
+    });
+    btnReset.addEventListener("click", () => {
+        filterText.value = "";
+        currentPage = 1;
+        renderTable();
+    });
 
     btnCerrarModal.addEventListener("click", closeModal);
     formEditar.addEventListener("submit", onSubmitEditar);
 });
 
-/* ============================
+/*
           TOAST
-============================ */
-function showToast(message, type="error") {
+*/
+function showToast(message, type = "error") {
     const div = document.createElement("div");
     div.className = `toast ${type}`;
     div.textContent = message;
@@ -45,10 +53,10 @@ function showToast(message, type="error") {
     setTimeout(() => div.remove(), 4000);
 }
 
-/* ============================
+/*
         CATEGORÍAS
-============================ */
-async function loadCategorias(){
+*/
+async function loadCategorias() {
     try {
         const res = await fetch(URL_CATEGORIAS);
         categorias = await res.json();
@@ -58,7 +66,7 @@ async function loadCategorias(){
     }
 }
 
-function populateSelects(){
+function populateSelects() {
     const crear = document.getElementById("crearCategoria");
     crear.innerHTML = `<option value="">-- Sin categoría --</option>`;
     selectEditarCategoria.innerHTML = crear.innerHTML;
@@ -69,10 +77,10 @@ function populateSelects(){
     });
 }
 
-/* ============================
+/*
           PRODUCTOS
-============================ */
-async function loadProductos(){
+*/
+async function loadProductos() {
     try {
         const res = await fetch(URL_PRODUCTOS);
         productos = await res.json();
@@ -84,7 +92,7 @@ async function loadProductos(){
     }
 }
 
-function renderTable(){
+function renderTable() {
     const q = filterText.value.toLowerCase().trim();
     const list = productos.filter(p =>
         (!q) || p.codigo.toLowerCase().includes(q) || p.nombre.toLowerCase().includes(q)
@@ -114,36 +122,36 @@ function renderTable(){
     renderPagination(list.length);
 }
 
-function renderPagination(total){
+function renderPagination(total) {
     const container = document.getElementById("pagination");
     const pages = Math.ceil(total / rowsPerPage);
 
-    if(pages <= 1){
+    if (pages <= 1) {
         container.innerHTML = "";
         return;
     }
 
     let html = '';
-    html += `<button ${currentPage===1 ? "disabled" : ""} onclick="goPage(${currentPage-1})">‹</button>`;
+    html += `<button ${currentPage === 1 ? "disabled" : ""} onclick="goPage(${currentPage - 1})">‹</button>`;
 
-    for(let i=1;i<=pages;i++){
-        html += `<button class="${i===currentPage?'active-page':''}" onclick="goPage(${i})">${i}</button>`;
+    for (let i = 1; i <= pages; i++) {
+        html += `<button class="${i === currentPage ? 'active-page' : ''}" onclick="goPage(${i})">${i}</button>`;
     }
 
-    html += `<button ${currentPage===pages ? "disabled" : ""} onclick="goPage(${currentPage+1})">›</button>`;
+    html += `<button ${currentPage === pages ? "disabled" : ""} onclick="goPage(${currentPage + 1})">›</button>`;
     container.innerHTML = html;
 }
 
-function goPage(n){
-    if(n < 1) n = 1;
+function goPage(n) {
+    if (n < 1) n = 1;
     currentPage = n;
     renderTable();
 }
 
-/* ---------------------------
+/*
         CREAR PRODUCTO
----------------------------- */
-async function onCrearProducto(e){
+*/
+async function onCrearProducto(e) {
     e.preventDefault();
 
     const payload = {
@@ -152,17 +160,17 @@ async function onCrearProducto(e){
         marca: document.getElementById("crearMarca").value.trim(),
         descripcion: document.getElementById("crearDescripcion").value.trim(),
         precio: parseFloat(document.getElementById("crearPrecio").value),
-        categoria: document.getElementById("crearCategoria").value ? { idCategoria: parseInt(document.getElementById("crearCategoria").value) } : null
+        categoria: document.getElementById("crearCategoria").value ? {idCategoria: parseInt(document.getElementById("crearCategoria").value)} : null
     };
 
     try {
         const res = await fetch(URL_PRODUCTOS, {
             method: "POST",
-            headers: {"Content-Type":"application/json"},
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify(payload)
         });
 
-        if(!res.ok){
+        if (!res.ok) {
             const text = await res.text();
             showToast(text);
             return;
@@ -176,10 +184,10 @@ async function onCrearProducto(e){
     }
 }
 
-/* ---------------------------
-        MODAL EDITAR
----------------------------- */
-async function abrirEditar(id){
+/*
+   MODAL EDITAR
+*/
+async function abrirEditar(id) {
     editingId = id;
 
     const res = await fetch(`${URL_PRODUCTOS}/id/${id}`);
@@ -195,13 +203,15 @@ async function abrirEditar(id){
     modal.classList.remove("hidden");
 }
 
-function closeModal(){
+function closeModal() {
     modal.classList.add("hidden");
     editingId = null;
 }
 
-/* EDITAR */
-async function onSubmitEditar(e){
+/*
+   EDITAR
+*/
+async function onSubmitEditar(e) {
     e.preventDefault();
 
     const payload = {
@@ -210,16 +220,16 @@ async function onSubmitEditar(e){
         marca: formEditar.marca.value.trim(),
         descripcion: formEditar.descripcion.value.trim(),
         precio: parseFloat(formEditar.precio.value),
-        categoria: formEditar.categoria.value ? { idCategoria: parseInt(formEditar.categoria.value) } : null
+        categoria: formEditar.categoria.value ? {idCategoria: parseInt(formEditar.categoria.value)} : null
     };
 
     const res = await fetch(`${URL_PRODUCTOS}/${editingId}`, {
         method: "PUT",
-        headers: {"Content-Type":"application/json"},
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(payload)
     });
 
-    if(!res.ok){
+    if (!res.ok) {
         const text = await res.text();
         showToast(text);
         return;
@@ -230,14 +240,14 @@ async function onSubmitEditar(e){
     showToast("Producto editado con éxito", "success");
 }
 
-/* ---------------------------
-        ELIMINAR
----------------------------- */
-async function eliminarProducto(id){
-    if(!confirm("¿Seguro que deseas eliminar este producto?")) return;
+/*
+   ELIMINAR
+*/
+async function eliminarProducto(id) {
+    if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
 
-    const res = await fetch(`${URL_PRODUCTOS}/${id}`, { method:"DELETE" });
-    if(!res.ok){
+    const res = await fetch(`${URL_PRODUCTOS}/${id}`, {method: "DELETE"});
+    if (!res.ok) {
         const text = await res.text();
         showToast(text);
         return;

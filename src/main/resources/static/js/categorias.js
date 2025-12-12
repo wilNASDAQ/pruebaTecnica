@@ -10,7 +10,9 @@ const btnCerrarModalCat = document.getElementById("btnCerrarModalCat");
 
 const toastContainer = document.getElementById("toast-container");
 
-// PAGINACIÓN
+/*
+    PAGINACIÓN
+ */
 let currentPageCat = 1;
 let rowsPerPageCat = 4;
 let categorias = [];
