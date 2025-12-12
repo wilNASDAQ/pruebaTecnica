@@ -25,6 +25,3 @@ Port: 6543
 User: postgres.zsauwhfjodmzzubnpcsy
 Database: postgres
 Password: pruebatecnica
-
-
-El proyecto está listo para ejecutar y probar directamente desde la base de datos online.
